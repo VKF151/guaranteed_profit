@@ -69,7 +69,7 @@ public class SlotMachineBlock extends BlockWithEntity{
 
     @Override
     protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) return ActionResult.SUCCESS;
+        if (world.isClient()) return ActionResult.SUCCESS;
 
         if (!(world.getBlockEntity(pos) instanceof SlotMachineBlockEntity blockEntity)) {
             return ActionResult.PASS;
@@ -99,7 +99,7 @@ public class SlotMachineBlock extends BlockWithEntity{
             blockEntity.markDirty();
             return ActionResult.SUCCESS;
         } else if (!handStack.isEmpty() && handStack.getItem() == ModItems.SLOT_SPINNER){
-            blockEntity.playGame(null, pos, world);
+            blockEntity.playGame(pos, world);
             if (!player.isInCreativeMode()) handStack.decrement(1);
         } else {
             if (!storedStack.isEmpty()) {
@@ -121,7 +121,7 @@ public class SlotMachineBlock extends BlockWithEntity{
 
     @Override
     protected void neighborUpdate(BlockState state, World world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
-        if (!world.isClient && world.isReceivingRedstonePower(pos)) {
+        if (!world.isClient() && world.isReceivingRedstonePower(pos)) {
             if (world.getBlockEntity(pos) instanceof SlotMachineBlockEntity blockEntity) {
                 ItemStack storedStack = blockEntity.getStack(0);
 
@@ -131,7 +131,7 @@ public class SlotMachineBlock extends BlockWithEntity{
 
                     if (!storedStack.isEmpty() && storedStack.getCount() > 0) {
                         storedStack.decrement(1);
-                        blockEntity.playGame(null, pos, world);
+                        blockEntity.playGame(pos, world);
 
                     }
                 }

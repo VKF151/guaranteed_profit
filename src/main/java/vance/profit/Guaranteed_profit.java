@@ -18,7 +18,6 @@ import vance.profit.item.ModItems;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class Guaranteed_profit implements ModInitializer {
 	public static final String MOD_ID = "guaranteed_profit";
@@ -62,7 +61,8 @@ public class Guaranteed_profit implements ModInitializer {
 						}
 					}
 					playerEntity.setStackInHand(hand, originalItem);
-					originalItem.set(ModComponents.TRANSFORMABLE_ENCHANTS, enchantsList);
+                    assert originalItem != null;
+                    originalItem.set(ModComponents.TRANSFORMABLE_ENCHANTS, enchantsList);
 
 					world.playSound(null, playerEntity.getBlockPos(),
 							SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.PLAYERS,

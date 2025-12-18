@@ -7,7 +7,6 @@ import net.minecraft.block.*;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.AttributeModifierSlot;
 import net.minecraft.component.type.AttributeModifiersComponent;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class CrazyAxeItem extends Item {
@@ -52,7 +52,7 @@ public class CrazyAxeItem extends Item {
                 )
                 .build();
     }
-    protected static final ImmutableMap STRIPPED_BLOCKS;
+    protected static final Map<Block, Block> STRIPPED_BLOCKS;
 
 
     public ActionResult useOnBlock(ItemUsageContext context) {
@@ -74,7 +74,7 @@ public class CrazyAxeItem extends Item {
                 world.setBlockState(blockPos, optional.get(), 11);
                 world.emitGameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Emitter.of(playerEntity, optional.get()));
                 if (playerEntity != null) {
-                    itemStack.damage(1, playerEntity, LivingEntity.getSlotForHand(context.getHand()));
+                    itemStack.damage(1, playerEntity, playerEntity.getActiveHand());
                 }
 
                 return ActionResult.SUCCESS;
@@ -114,7 +114,7 @@ public class CrazyAxeItem extends Item {
     }
 
     private Optional<BlockState> getStrippedState(BlockState state) {
-        return Optional.ofNullable((Block)STRIPPED_BLOCKS.get(state.getBlock())).map((block) -> block.getDefaultState().with(PillarBlock.AXIS, state.get(PillarBlock.AXIS)));
+        return Optional.ofNullable(STRIPPED_BLOCKS.get(state.getBlock())).map((block) -> block.getDefaultState().with(PillarBlock.AXIS, state.get(PillarBlock.AXIS)));
     }
 
     static {

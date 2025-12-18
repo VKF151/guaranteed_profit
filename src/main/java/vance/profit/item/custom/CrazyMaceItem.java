@@ -52,7 +52,7 @@ public class CrazyMaceItem extends MaceItem {
     @Override
     public void postHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         if (shouldDealAdditionalDamage(attacker)) {
-            ServerWorld serverWorld = (ServerWorld)attacker.getWorld();
+            ServerWorld serverWorld = (ServerWorld)attacker.getEntityWorld();
             attacker.setVelocity(attacker.getVelocity().withAxis(Direction.Axis.Y, 0.009999999776482582));
             ServerPlayerEntity serverPlayerEntity;
             if (attacker instanceof ServerPlayerEntity) {
@@ -82,7 +82,7 @@ public class CrazyMaceItem extends MaceItem {
     private static void knockbackNearbyEntities(World world, Entity attacker, Entity attacked) {
         world.syncWorldEvent(2013, attacked.getSteppingPos(), 750);
         world.getEntitiesByClass(LivingEntity.class, attacked.getBoundingBox().expand(3.5), getKnockbackPredicate(attacker, attacked)).forEach((entity) -> {
-            Vec3d vec3d = entity.getPos().subtract(attacked.getPos());
+            Vec3d vec3d = entity.getEntityPos().subtract(attacked.getEntityPos());
             double d = getKnockback(attacker, entity, vec3d);
             Vec3d vec3d2 = vec3d.normalize().multiply(d);
             if (d > 0.0) {
@@ -137,6 +137,6 @@ public class CrazyMaceItem extends MaceItem {
         return (3.5 - distance.length()) * 0.699999988079071 * (double)(attacker.fallDistance > 5.0 ? 2 : 1) * (1.0 - attacked.getAttributeValue(EntityAttributes.KNOCKBACK_RESISTANCE));
     }
     private Vec3d getCurrentExplosionImpactPos(ServerPlayerEntity player) {
-        return player.shouldIgnoreFallDamageFromCurrentExplosion() && player.currentExplosionImpactPos != null && player.currentExplosionImpactPos.y <= player.getPos().y ? player.currentExplosionImpactPos : player.getPos();
+        return player.shouldIgnoreFallDamageFromCurrentExplosion() && player.currentExplosionImpactPos != null && player.currentExplosionImpactPos.y <= player.getEntityPos().y ? player.currentExplosionImpactPos : player.getEntityPos();
     }
 }

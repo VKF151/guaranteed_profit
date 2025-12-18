@@ -28,6 +28,7 @@ import vance.profit.Guaranteed_profit;
 import vance.profit.inventory.SlotMachineInventory;
 
 import java.util.List;
+import java.util.Objects;
 
 import static net.minecraft.block.Block.*;
 import static vance.profit.block.custom.SlotMachineBlock.WIN;
@@ -65,10 +66,10 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
         Inventories.readData(view, items);
     }
 
-    public void playGame(PlayerEntity player, BlockPos pos, World world) {
+    public void playGame(BlockPos pos, World world) {
 
 
-        if (!world.isClient) {
+        if (!world.isClient()) {
             boolean win = world.random.nextFloat() <0.25;
 
             BlockState currentState = world.getBlockState(pos);
@@ -108,7 +109,8 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
     }
 
     private static List<ItemStack> getWonItem(BlockEntity entity) {
-        LootTable lootTable = entity.getWorld().getServer().getReloadableRegistries().getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE,Identifier.of(Guaranteed_profit.MOD_ID, "rewards/slot_machine")));
+        assert entity.getWorld() != null;
+        LootTable lootTable = Objects.requireNonNull(entity.getWorld().getServer()).getReloadableRegistries().getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE,Identifier.of(Guaranteed_profit.MOD_ID, "rewards/slot_machine")));
         return lootTable.generateLoot(
                 new LootWorldContext.Builder((ServerWorld) entity.getWorld())
                         .add(LootContextParameters.ORIGIN, Vec3d.ofCenter(entity.getPos()))

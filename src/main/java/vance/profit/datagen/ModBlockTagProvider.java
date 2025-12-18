@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.BlockTags;
+import org.jetbrains.annotations.NotNull;
 import vance.profit.block.ModBlocks;
 import vance.profit.util.ModTags;
 
@@ -15,7 +16,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+    protected void configure(RegistryWrapper.@NotNull WrapperLookup wrapperLookup) {
         valueLookupBuilder(ModTags.Blocks.NEEDS_CRAZY_SLOTS_TOOL)
                 .forceAddTag(BlockTags.NEEDS_DIAMOND_TOOL);
 

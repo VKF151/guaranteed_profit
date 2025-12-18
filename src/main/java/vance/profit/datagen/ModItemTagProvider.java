@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.item.Items;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
+import org.jetbrains.annotations.NotNull;
 import vance.profit.item.ModItems;
 import vance.profit.util.ModTags;
 
@@ -16,7 +17,7 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
     }
 
     @Override
-    protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+    protected void configure(RegistryWrapper.@NotNull WrapperLookup wrapperLookup) {
         valueLookupBuilder(ModTags.Items.CRAZY_SLOTS_REPAIR)
                 .add(Items.EMERALD);
 

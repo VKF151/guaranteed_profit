@@ -7,6 +7,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.loot.LootTable;
 import net.minecraft.loot.context.LootContextParameters;
 import net.minecraft.loot.context.LootContextTypes;
@@ -134,17 +135,20 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        return new int[0];
+        return new int[]{0};
+    }
+    public boolean isValid(int slot, ItemStack stack) {
+        return slot == 0 && (stack.isEmpty() || stack.isOf(Items.DIAMOND));
     }
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, Direction direction) {
-        return direction != Direction.DOWN;
+        return isValid(slot, stack);
     }
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction direction) {
-        return true;
+        return slot == 0 && stack.isOf(Items.DIAMOND);
     }
 
 

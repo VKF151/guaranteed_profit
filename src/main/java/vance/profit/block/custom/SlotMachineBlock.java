@@ -130,8 +130,8 @@ public class SlotMachineBlock extends BlockWithEntity{
                     blockEntity.setLastActivatedTime(currentTime);
 
                     if (!storedStack.isEmpty() && storedStack.getCount() > 0) {
-                        storedStack.decrement(1);
-                        blockEntity.playGame(pos, world);
+                            storedStack.decrement(1);
+                            blockEntity.playGame(pos, world);
 
                     }
                 }

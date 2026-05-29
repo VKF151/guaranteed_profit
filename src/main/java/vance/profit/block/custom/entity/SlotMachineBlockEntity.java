@@ -1,41 +1,43 @@
 package vance.profit.block.custom.entity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.context.LootContextParameters;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.context.LootWorldContext;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.storage.ReadView;
-import net.minecraft.storage.WriteView;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.resources.Identifier;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import vance.profit.Guaranteed_profit;
 import vance.profit.inventory.SlotMachineInventory;
 
 import java.util.List;
 import java.util.Objects;
 
-import static net.minecraft.block.Block.*;
+import static net.minecraft.world.level.block.Block.*;
 import static vance.profit.block.custom.SlotMachineBlock.WIN;
 
-public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineInventory, SidedInventory {
-    private final DefaultedList<ItemStack> items = DefaultedList.ofSize(1, ItemStack.EMPTY);
+public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineInventory, WorldlyContainer {
+    private final NonNullList<ItemStack> items = NonNullList.withSize(1, ItemStack.EMPTY);
     private boolean WON = false;
     private long lastActivatedTime = -1;
 
@@ -44,78 +46,78 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
     }
 
     @Override
-    public DefaultedList<ItemStack> getItems() {
+    public NonNullList<ItemStack> getItems() {
         return items;
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
+    public @Nullable ItemStack removeItemNoUpdate(int slot) {
         items.set(slot, ItemStack.EMPTY);
-        markDirty();
+        setChanged();
         return null;
     }
 
     @Override
-    protected void writeData(WriteView view) {
-        super.writeData(view);
-        Inventories.writeData(view, items);
+    protected void saveAdditional(@NonNull ValueOutput view) {
+        super.saveAdditional(view);
+        ContainerHelper.saveAllItems(view, items);
     }
 
     @Override
-    protected void readData(ReadView view) {
-        super.readData(view);
-        Inventories.readData(view, items);
+    protected void loadAdditional(@NonNull ValueInput view) {
+        super.loadAdditional(view);
+        ContainerHelper.loadAllItems(view, items);
     }
 
-    public void playGame(BlockPos pos, World world) {
+    public void playGame(BlockPos pos, Level world) {
 
 
-        if (!world.isClient()) {
-            boolean win = world.random.nextFloat() <0.25;
+        if (!world.isClientSide()) {
+            boolean win = world.getRandom().nextFloat() <0.25;
 
             BlockState currentState = world.getBlockState(pos);
-            world.setBlockState(pos, currentState.with(WIN, win), Block.NOTIFY_ALL);
+            world.setBlock(pos, currentState.setValue(WIN, win), Block.UPDATE_ALL);
             world.playSound(
-                    null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BASS, SoundCategory.BLOCKS, 1.0f, 1.0f
+                    null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.NOTE_BLOCK_BASS, SoundSource.BLOCKS, 1.0f, 1.0f
             );
             if (win) {
                 setWON(true);
                 world.playSound(
-                        null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_PLING, SoundCategory.BLOCKS, 1.0f, 1.0f
+                        null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.NOTE_BLOCK_PLING, SoundSource.BLOCKS, 1.0f, 1.0f
                 );
                 for (ItemStack itemStack : getWonItem(SlotMachineBlockEntity.this)) {
-                    dropStack(world, pos.up(), itemStack);
+                    popResource(world, pos.above(), itemStack);
                 }
 
 
 
             } else {
                 setWON(false);
-                world.setBlockState(pos, currentState.with(WIN, false));
+                world.setBlockAndUpdate(pos, currentState.setValue(WIN, false));
                 world.playSound(
-                        null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_SNARE, SoundCategory.BLOCKS, 1.0f, 1.0f
+                        null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.NOTE_BLOCK_SNARE, SoundSource.BLOCKS, 1.0f, 1.0f
                 );
-            } markDirty();
+            } setChanged();
         }
     }
 
-    public void winGame(PlayerEntity player, BlockPos pos, World world){
+    public void winGame(Player player, BlockPos pos, Level world){
         setWON(true);
         world.playSound(
-                null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_PLING, SoundCategory.BLOCKS, 1.0f, 1.0f
+                null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.NOTE_BLOCK_PLING, SoundSource.BLOCKS, 1.0f, 1.0f
         );
         for (ItemStack itemStack : getWonItem(SlotMachineBlockEntity.this)) {
-            dropStack(world, pos.up(), itemStack);
+            popResource(world, pos.above(), itemStack);
         }
     }
 
     private static List<ItemStack> getWonItem(BlockEntity entity) {
-        assert entity.getWorld() != null;
-        LootTable lootTable = Objects.requireNonNull(entity.getWorld().getServer()).getReloadableRegistries().getLootTable(RegistryKey.of(RegistryKeys.LOOT_TABLE,Identifier.of(Guaranteed_profit.MOD_ID, "rewards/slot_machine")));
-        return lootTable.generateLoot(
-                new LootWorldContext.Builder((ServerWorld) entity.getWorld())
-                        .add(LootContextParameters.ORIGIN, Vec3d.ofCenter(entity.getPos()))
-                        .build(LootContextTypes.CHEST)
+        assert entity.getLevel() != null;
+        LootTable lootTable = Objects.requireNonNull(entity.getLevel().getServer()).reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, "rewards/slot_machine")));
+        return lootTable.getRandomItems(
+                new LootParams.Builder((ServerLevel) entity.getLevel())
+                        .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(entity.getBlockPos()))
+                        .create(LootContextParamSets.CHEST)
         );
     }
 
@@ -134,21 +136,21 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
+    public int @NonNull [] getSlotsForFace(@NonNull Direction side) {
         return new int[]{0};
     }
-    public boolean isValid(int slot, ItemStack stack) {
-        return slot == 0 && (stack.isEmpty() || stack.isOf(Items.DIAMOND));
+    public boolean canPlaceItem(int slot, @NonNull ItemStack stack) {
+        return slot == 0 && (stack.isEmpty() || stack.is(Items.DIAMOND));
     }
 
     @Override
-    public boolean canInsert(int slot, ItemStack stack, Direction direction) {
-        return isValid(slot, stack);
+    public boolean canPlaceItemThroughFace(int slot, @NonNull ItemStack stack, Direction direction) {
+        return canPlaceItem(slot, stack);
     }
 
     @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction direction) {
-        return slot == 0 && stack.isOf(Items.DIAMOND);
+    public boolean canTakeItemThroughFace(int slot, @NonNull ItemStack stack, @NonNull Direction direction) {
+        return slot == 0 && stack.is(Items.DIAMOND);
     }
 
 

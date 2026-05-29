@@ -1,23 +1,23 @@
 package vance.profit.datagen;
 
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.minecraft.item.Items;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.tag.ItemTags;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.minecraft.world.item.Items;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.ItemTags;
 import org.jetbrains.annotations.NotNull;
 import vance.profit.item.ModItems;
 import vance.profit.util.ModTags;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
-    public ModItemTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
+    public ModItemTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
     @Override
-    protected void configure(RegistryWrapper.@NotNull WrapperLookup wrapperLookup) {
+    protected void addTags(HolderLookup.@NotNull Provider wrapperLookup) {
         valueLookupBuilder(ModTags.Items.CRAZY_SLOTS_REPAIR)
                 .add(Items.EMERALD);
 

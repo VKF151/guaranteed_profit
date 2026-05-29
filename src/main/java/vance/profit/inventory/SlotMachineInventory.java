@@ -1,37 +1,39 @@
 package vance.profit.inventory;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
-public interface SlotMachineInventory extends Inventory {
+public interface SlotMachineInventory extends Container {
 
-    DefaultedList<ItemStack> getItems();
+    NonNullList<ItemStack> getItems();
 
-    static SlotMachineInventory of(DefaultedList<ItemStack> items) {
+    static SlotMachineInventory of(NonNullList<ItemStack> items) {
         return new SlotMachineInventory() {
             @Override
-            public ItemStack removeStack(int slot) {
+            public @Nullable ItemStack removeItemNoUpdate(int slot) {
                 return null;
             }
 
-            private final DefaultedList<ItemStack> inventoryItems = items;
+            private final NonNullList<ItemStack> inventoryItems = items;
 
             @Override
-            public DefaultedList<ItemStack> getItems() {
+            public NonNullList<ItemStack> getItems() {
                 return inventoryItems;
             }
         };
     }
 
     static SlotMachineInventory ofSize(int size) {
-        return of(DefaultedList.ofSize(size, ItemStack.EMPTY));
+        return of(NonNullList.withSize(size, ItemStack.EMPTY));
     }
 
     @Override
-    default int size() {
+    default int getContainerSize() {
         return getItems().size();
     }
 
@@ -46,41 +48,41 @@ public interface SlotMachineInventory extends Inventory {
     }
 
     @Override
-    default ItemStack getStack(int slot) {
+    default @NonNull ItemStack getItem(int slot) {
         return getItems().get(slot);
     }
 
     @Override
-    default ItemStack removeStack(int slot, int count) {
-        ItemStack result = Inventories.splitStack(getItems(), slot, count);
+    default @NonNull ItemStack removeItem(int slot, int count) {
+        ItemStack result = ContainerHelper.removeItem(getItems(), slot, count);
         if (!result.isEmpty()) {
-            markDirty();
+            setChanged();
         }
         return result;
     }
 
     @Override
-    default void setStack(int slot, ItemStack stack) {
+    default void setItem(int slot, @NonNull ItemStack stack) {
         getItems().set(slot, stack);
-        if (stack.getCount() > stack.getMaxCount()) {
-            stack.setCount(stack.getMaxCount());
+        if (stack.getCount() > stack.getMaxStackSize()) {
+            stack.setCount(stack.getMaxStackSize());
         }
-        markDirty();
+        setChanged();
     }
 
     @Override
-    default void clear() {
+    default void clearContent() {
         getItems().clear();
-        markDirty();
+        setChanged();
     }
 
     @Override
-    default void markDirty() {
+    default void setChanged() {
 
     }
 
     @Override
-    default boolean canPlayerUse(PlayerEntity player) {
+    default boolean stillValid(@NonNull Player player) {
         return true;
     }
 

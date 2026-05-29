@@ -1,10 +1,10 @@
 package vance.profit.util;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.resources.Identifier;
 import vance.profit.Guaranteed_profit;
 
 public class ModTags {
@@ -16,14 +16,14 @@ public class ModTags {
                 createTag("incorrect_for_crazy_slots_tool");
 
         private static TagKey<Block> createTag(String name) {
-            return TagKey.of(RegistryKeys.BLOCK, Identifier.of(Guaranteed_profit.MOD_ID, name));
+            return TagKey.create(Registries.BLOCK, Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, name));
         }
     }
     public static class Items {
         public static final TagKey<Item> CRAZY_SLOTS_REPAIR = createTag("crazy_slots_repair");
 
         private static TagKey<Item> createTag(String name) {
-            return TagKey.of(RegistryKeys.ITEM, Identifier.of(Guaranteed_profit.MOD_ID, name));
+            return TagKey.create(Registries.ITEM, Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, name));
         }
     }
 }

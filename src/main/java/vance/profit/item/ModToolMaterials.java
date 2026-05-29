@@ -1,6 +1,6 @@
 package vance.profit.item;
 
-import net.minecraft.item.ToolMaterial;
+import net.minecraft.world.item.ToolMaterial;
 import vance.profit.util.ModTags;
 
 public class ModToolMaterials {

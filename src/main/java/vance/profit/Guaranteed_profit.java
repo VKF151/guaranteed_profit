@@ -4,11 +4,11 @@ import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.minecraft.component.type.ItemEnchantmentsComponent;
-import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vance.profit.block.ModBlocks;
@@ -31,45 +31,45 @@ public class Guaranteed_profit implements ModInitializer {
 		ModComponents.initialize();
 
 		AttackEntityCallback.EVENT.register((playerEntity, world, hand, entity, entityHitResult) -> {
-			ItemStack stack = playerEntity.getMainHandStack();
+			ItemStack stack = playerEntity.getMainHandItem();
 			if (stack.get(ModComponents.ORIGINALITEM) != null && !playerEntity.isSpectator()) {
 				stack.set(ModComponents.TRANSFORMABLE, true);
 			}
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 		});
 
 		UseItemCallback.EVENT.register((playerEntity, world, hand) -> {
-			ItemStack stack = playerEntity.getMainHandStack();
+			ItemStack stack = playerEntity.getMainHandItem();
 			ItemStack originalItem = stack.get(ModComponents.ORIGINALITEM);
 			Integer weaponId = stack.get(ModComponents.WEAPON_ID);
-			ItemEnchantmentsComponent weaponEnchants = stack.getEnchantments();
+			ItemEnchantments weaponEnchants = stack.getEnchantments();
 
 
 			if (Boolean.TRUE.equals(stack.get(ModComponents.TRANSFORMABLE)) && !playerEntity.isSpectator()) {
-				if (playerEntity.isSneaking() && !playerEntity.isSwimming()) {
+				if (playerEntity.isShiftKeyDown() && !playerEntity.isSwimming()) {
 
-					List<ItemEnchantmentsComponent> enchantsList = new ArrayList<>();
-					List<ItemEnchantmentsComponent> existing = stack.get(ModComponents.TRANSFORMABLE_ENCHANTS);
+					List<ItemEnchantments> enchantsList = new ArrayList<>();
+					List<ItemEnchantments> existing = stack.get(ModComponents.TRANSFORMABLE_ENCHANTS);
 					if (existing != null) {
 						enchantsList.addAll(existing);
 					}
 
-					if (weaponId != null && weaponEnchants != null) {
+					if (weaponId != null) {
 						// Make sure weaponId is a valid index
 						if (weaponId >= 0 && weaponId <= enchantsList.size()) {
 							enchantsList.set(weaponId -1, weaponEnchants);
 						}
 					}
-					playerEntity.setStackInHand(hand, originalItem);
                     assert originalItem != null;
+                    playerEntity.setItemInHand(hand, originalItem);
                     originalItem.set(ModComponents.TRANSFORMABLE_ENCHANTS, enchantsList);
 
-					world.playSound(null, playerEntity.getBlockPos(),
-							SoundEvents.BLOCK_AMETHYST_CLUSTER_BREAK, SoundCategory.PLAYERS,
+					world.playSound(null, playerEntity.blockPosition(),
+							SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS,
 							0.35f, 1.0f);
 				}
 			}
-			return ActionResult.PASS;
+			return InteractionResult.PASS;
 		});
 
 

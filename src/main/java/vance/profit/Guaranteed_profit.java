@@ -12,7 +12,9 @@ import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vance.profit.block.ModBlocks;
+import vance.profit.block.custom.SlotMachineBlock;
 import vance.profit.block.custom.entity.ModBlockEntities;
+import vance.profit.codec.AcceptedCurrencies;
 import vance.profit.components.ModComponents;
 import vance.profit.item.ModItems;
 
@@ -28,6 +30,7 @@ public class Guaranteed_profit implements ModInitializer {
 		ModItems.registerModItems();
 		ModBlocks.initialize();
 		ModBlockEntities.initialize();
+		AcceptedCurrencies.loadCurrencies();
 		ModComponents.initialize();
 
 		AttackEntityCallback.EVENT.register((playerEntity, world, hand, entity, entityHitResult) -> {

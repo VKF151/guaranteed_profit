@@ -1,9 +1,10 @@
 package vance.profit.block.custom.entity;
 
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +31,7 @@ import org.jspecify.annotations.Nullable;
 import vance.profit.Guaranteed_profit;
 import vance.profit.inventory.SlotMachineInventory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -101,19 +103,19 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
         }
     }
 
-    public void winGame(Player player, BlockPos pos, Level world){
-        setWON(true);
-        world.playSound(
-                null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.NOTE_BLOCK_PLING, SoundSource.BLOCKS, 1.0f, 1.0f
-        );
-        for (ItemStack itemStack : getWonItem(SlotMachineBlockEntity.this)) {
-            popResource(world, pos.above(), itemStack);
-        }
-    }
-
     private static List<ItemStack> getWonItem(BlockEntity entity) {
         assert entity.getLevel() != null;
-        LootTable lootTable = Objects.requireNonNull(entity.getLevel().getServer()).reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, "rewards/slot_machine")));
+        if (!(entity instanceof SlotMachineBlockEntity slotMachine)) {
+            return Collections.emptyList();
+        }
+        ItemStack internalStack = slotMachine.getItem(0);
+        if (internalStack.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Item internalCurrency = internalStack.getItem();
+        String itemName = BuiltInRegistries.ITEM.getKey(internalCurrency).getPath();
+        Identifier lootTableId = Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, "rewards/slot_machine/" + itemName);
+        LootTable lootTable = Objects.requireNonNull(entity.getLevel().getServer()).reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, lootTableId));
         return lootTable.getRandomItems(
                 new LootParams.Builder((ServerLevel) entity.getLevel())
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(entity.getBlockPos()))
@@ -152,6 +154,5 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
     public boolean canTakeItemThroughFace(int slot, @NonNull ItemStack stack, @NonNull Direction direction) {
         return slot == 0 && stack.is(Items.DIAMOND);
     }
-
 
 }

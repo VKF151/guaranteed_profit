@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
 import vance.profit.block.custom.entity.SlotMachineBlockEntity;
 import vance.profit.item.ModItems;
+import static vance.profit.codec.AcceptedCurrencies.ACCEPTED_CURRENCIES;
 
 public class SlotMachineBlock extends BaseEntityBlock {
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
@@ -80,10 +80,13 @@ public class SlotMachineBlock extends BaseEntityBlock {
             return InteractionResult.PASS;
         }
 
+
+
         ItemStack handStack = player.getItemInHand(hand);
 
         ItemStack storedStack = blockEntity.getItem(0);
-        if (!handStack.isEmpty() && handStack.getItem() == Items.DIAMOND && !player.isShiftKeyDown()) {
+        boolean isValid = !handStack.isEmpty() && ACCEPTED_CURRENCIES.contains(handStack.getItem());
+        if (isValid && !player.isShiftKeyDown()) {
             if (storedStack.isEmpty()) {
                 int insertAmount = Math.min(handStack.getCount(), handStack.getMaxStackSize());
                 blockEntity.setItem(0, handStack.split(insertAmount));

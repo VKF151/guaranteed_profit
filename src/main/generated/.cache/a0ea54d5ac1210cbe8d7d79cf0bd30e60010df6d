@@ -1,7 +1,0 @@
-// 1.21.7	-999999999-01-01T00:00:00	guaranteed_profit/Tags for minecraft:item
-8c4f379d97e2cd8c7f9297bf4fab7e60083ecb0d data/guaranteed_profit/tags/item/crazy_slots_repair.json
-ad6700ea9e5b55c72d0ff1b23cf0a84f91995597 data/minecraft/tags/item/axes.json
-ac7085e20cb9a37baa2fd0183d5d0fc267730eb1 data/minecraft/tags/item/enchantable/mace.json
-aeea28c92c47b4f8bbe3d1eb4e24d376c61b98ed data/minecraft/tags/item/enchantable/trident.json
-3f52b8b49d044d44f865848ba21fa3cf71cbad57 data/minecraft/tags/item/hoes.json
-810ce68d30ade465c858b182f5355aab66a1d1c3 data/minecraft/tags/item/swords.json

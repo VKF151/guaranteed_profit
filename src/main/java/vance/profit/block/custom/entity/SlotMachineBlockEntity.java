@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
@@ -29,6 +28,7 @@ import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import vance.profit.Guaranteed_profit;
+import vance.profit.codec.AcceptedCurrencies;
 import vance.profit.inventory.SlotMachineInventory;
 
 import java.util.Collections;
@@ -142,7 +142,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
         return new int[]{0};
     }
     public boolean canPlaceItem(int slot, @NonNull ItemStack stack) {
-        return slot == 0 && (stack.isEmpty() || stack.is(Items.DIAMOND));
+        return slot == 0 && (stack.isEmpty() || AcceptedCurrencies.ACCEPTED_CURRENCIES.contains(stack.getItem()));
     }
 
     @Override
@@ -152,7 +152,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
 
     @Override
     public boolean canTakeItemThroughFace(int slot, @NonNull ItemStack stack, @NonNull Direction direction) {
-        return slot == 0 && stack.is(Items.DIAMOND);
+        return slot == 0 && AcceptedCurrencies.ACCEPTED_CURRENCIES.contains(stack.getItem());
     }
 
 }

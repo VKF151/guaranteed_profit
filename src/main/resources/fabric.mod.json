@@ -1,7 +1,7 @@
 {
 	"schemaVersion": 1,
 	"id": "guaranteed_profit",
-	"version": "2.2.3",
+	"version": "2.2.4",
 	"name": "guaranteed_profit",
 	"description": "Adds gambling",
 	"authors": [

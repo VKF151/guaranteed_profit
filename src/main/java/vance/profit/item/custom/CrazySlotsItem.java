@@ -1,6 +1,8 @@
 package vance.profit.item.custom;
 
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.Unit;
+import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -37,6 +39,8 @@ public class CrazySlotsItem extends Item {
             ItemEnchantments[] d = {enchants,enchants,enchants,enchants,enchants,enchants};
             ArrayList<ItemEnchantments> defaultEnchants = new ArrayList<>(Arrays.asList(d));
             List<ItemEnchantments> previousEnchants = player.getItemInHand(hand).get(ModComponents.TRANSFORMABLE_ENCHANTS);
+            List<ItemStack> ammo = new ArrayList<>(1);
+            ammo.add(new ItemStack(Items.SPECTRAL_ARROW));
 
             if (randomNumber <= 3) {
                 if (isHealthLow(player)) {
@@ -47,7 +51,7 @@ public class CrazySlotsItem extends Item {
                     player.setItemInHand(hand, newItem);
                     player.getItemInHand(hand).set(DataComponents.ITEM_NAME, Component.translatable("item.guaranteed_profit.crazy_crossbow"));
                     player.getItemInHand(hand).set(DataComponents.RARITY, Rarity.RARE);
-                    player.addItem(new ItemStack(Items.SPECTRAL_ARROW));
+                    player.getItemInHand(hand).set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.ofNonEmpty(ammo));
                     player.getItemInHand(hand).set(ModComponents.WEAPON_ID, randomNumber);
 
                 } else {player.setItemInHand(hand, newItem);
@@ -60,6 +64,7 @@ public class CrazySlotsItem extends Item {
 
             player.getItemInHand(hand).set(ModComponents.ORIGINALITEM, ModItems.CRAZY_SLOTS.getDefaultInstance());
             player.getItemInHand(hand).set(ModComponents.TRANSFORMABLE, false);
+            player.getItemInHand(hand).set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
 
             player.getItemInHand(hand).set(ModComponents.TRANSFORMABLE_ENCHANTS, Objects.requireNonNullElse(previousEnchants, defaultEnchants));
 

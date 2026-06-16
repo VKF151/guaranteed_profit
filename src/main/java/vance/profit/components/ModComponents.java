@@ -28,6 +28,9 @@ public class ModComponents {
     public static final DataComponentType<List<ItemEnchantments>> TRANSFORMABLE_ENCHANTS =
             register("transformable_enchants", listBuilder -> listBuilder.persistent(ItemEnchantments.CODEC.listOf()).cacheEncoding());
 
+    public static final DataComponentType<Integer> ABILITY_USES =
+            register("ability_uses", integerBuilder -> integerBuilder.persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
         return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, name),
                 builderOperator.apply(DataComponentType.builder()).build());

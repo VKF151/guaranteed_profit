@@ -3,6 +3,7 @@
   "package": "vance.profit.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "CrossbowMixin",
     "ExampleMixin"
   ],
   "injectors": {

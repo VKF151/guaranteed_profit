@@ -30,6 +30,7 @@ public class CrazyMaceItem extends MaceItem {
     }
 
     public static final Identifier BASE_ATTACK_REACH_MODIFIER_ID = Identifier.withDefaultNamespace("base_attack_reach");
+    public static final Identifier BASE_GRAVITY_MODIFIER_ID = Identifier.withDefaultNamespace("base_gravity");
 
     public static ItemAttributeModifiers createAttributeModifiers() {
         return ItemAttributeModifiers.builder()
@@ -48,6 +49,9 @@ public class CrazyMaceItem extends MaceItem {
                         new AttributeModifier(BASE_ATTACK_REACH_MODIFIER_ID, 0.25, AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.MAINHAND
                 )
+                .add(Attributes.GRAVITY,
+                        new AttributeModifier(BASE_GRAVITY_MODIFIER_ID, -0.03, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND)
                 .build();
     }
 

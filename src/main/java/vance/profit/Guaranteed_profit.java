@@ -12,10 +12,10 @@ import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vance.profit.block.ModBlocks;
-import vance.profit.block.custom.SlotMachineBlock;
 import vance.profit.block.custom.entity.ModBlockEntities;
 import vance.profit.codec.AcceptedCurrencies;
 import vance.profit.components.ModComponents;
+import vance.profit.events.CrossbowFireCallback;
 import vance.profit.item.ModItems;
 
 import java.util.ArrayList;
@@ -49,8 +49,6 @@ public class Guaranteed_profit implements ModInitializer {
 
 
 			if (Boolean.TRUE.equals(stack.get(ModComponents.TRANSFORMABLE)) && !playerEntity.isSpectator()) {
-				if (playerEntity.isShiftKeyDown() && !playerEntity.isSwimming()) {
-
 					List<ItemEnchantments> enchantsList = new ArrayList<>();
 					List<ItemEnchantments> existing = stack.get(ModComponents.TRANSFORMABLE_ENCHANTS);
 					if (existing != null) {
@@ -58,7 +56,6 @@ public class Guaranteed_profit implements ModInitializer {
 					}
 
 					if (weaponId != null) {
-						// Make sure weaponId is a valid index
 						if (weaponId >= 0 && weaponId <= enchantsList.size()) {
 							enchantsList.set(weaponId -1, weaponEnchants);
 						}
@@ -70,13 +67,40 @@ public class Guaranteed_profit implements ModInitializer {
 					world.playSound(null, playerEntity.blockPosition(),
 							SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS,
 							0.35f, 1.0f);
-				}
 			}
 			return InteractionResult.PASS;
 		});
 
+		CrossbowFireCallback.EVENT.register((player, level, hand) -> {
+			ItemStack mainHandItem = player.getMainHandItem();
+			ItemStack originalItem = mainHandItem.get(ModComponents.ORIGINALITEM);
+			Integer weaponId = mainHandItem.get(ModComponents.WEAPON_ID);
+			ItemEnchantments weaponEnchants = mainHandItem.getEnchantments();
 
 
+			if (mainHandItem.get(ModComponents.TRANSFORMABLE) != null && !player.isSpectator()) {
+				List<ItemEnchantments> enchantsList = new ArrayList<>();
+				List<ItemEnchantments> existing = mainHandItem.get(ModComponents.TRANSFORMABLE_ENCHANTS);
+				if (existing != null) {
+					enchantsList.addAll(existing);
+				}
+
+				if (weaponId != null) {
+					if (weaponId >= 0 && weaponId <= enchantsList.size()) {
+						enchantsList.set(weaponId -1, weaponEnchants);
+					}
+				}
+				assert originalItem != null;
+				player.setItemInHand(hand, originalItem);
+				originalItem.set(ModComponents.TRANSFORMABLE_ENCHANTS, enchantsList);
+
+				level.playSound(null, player.blockPosition(),
+						SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS,
+						0.35f, 1.0f);
+
+			}
+			return InteractionResult.PASS;
+		});
 
 	}
 }

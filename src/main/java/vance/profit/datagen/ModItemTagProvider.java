@@ -2,11 +2,11 @@ package vance.profit.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
-import net.minecraft.world.item.Items;
+import net.minecraft.references.ItemIds;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import org.jetbrains.annotations.NotNull;
-import vance.profit.item.ModItems;
+import vance.profit.item.ids.ModItemIds;
 import vance.profit.util.ModTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,25 +18,12 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider wrapperLookup) {
-        valueLookupBuilder(ModTags.Items.CRAZY_SLOTS_REPAIR)
-                .add(Items.EMERALD);
-
-        valueLookupBuilder(ItemTags.AXES)
-                .add(ModItems.CRAZY_AXE);
-
-        valueLookupBuilder(ItemTags.SWORDS)
-                .add(ModItems.CRAZY_SWORD);
-
-        valueLookupBuilder(ItemTags.SWORDS)
-                .add(ModItems.CRAZY_SCYTHE);
-
-        valueLookupBuilder(ItemTags.HOES)
-                .add(ModItems.CRAZY_SCYTHE);
-
-        valueLookupBuilder(ItemTags.MACE_ENCHANTABLE)
-                .add(ModItems.CRAZY_MACE);
-
-        valueLookupBuilder(ItemTags.TRIDENT_ENCHANTABLE)
-                .add(ModItems.CRAZY_TRIDENT);
+        builder(ModTags.Items.CRAZY_SLOTS_REPAIR).add(ItemIds.EMERALD);
+        builder(ItemTags.AXES).add(ModItemIds.CRAZY_AXE);
+        builder(ItemTags.SWORDS).add(ModItemIds.CRAZY_SWORD);
+        builder(ItemTags.SWORDS).add(ModItemIds.CRAZY_SCYTHE);
+        builder(ItemTags.HOES).add(ModItemIds.CRAZY_SCYTHE);
+        builder(ItemTags.MACE_ENCHANTABLE).add(ModItemIds.CRAZY_MACE);
+        builder(ItemTags.TRIDENT_ENCHANTABLE).add(ModItemIds.CRAZY_TRIDENT);
     }
 }

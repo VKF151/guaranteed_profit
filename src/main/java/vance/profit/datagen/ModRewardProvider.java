@@ -46,7 +46,7 @@ public class ModRewardProvider implements DataProvider {
     public @NonNull CompletableFuture<?> run(@NonNull CachedOutput cache) {
         final var elements = this.collect();
 
-        final var paths = this.output.createPathProvider(PackOutput.Target.REPORTS, this.directory);
+        final var paths = this.output.createPathProvider(PackOutput.Target.DATA_PACK, this.directory);
 
         return CompletableFuture.allOf(
                 elements.entrySet().stream().map(x ->

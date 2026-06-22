@@ -22,7 +22,8 @@ public class ModCodecRewardProvider extends ModRewardProvider{
     private static void currencyCodec(BiConsumer<String, JsonElement> consumer){
         AcceptedCurrencies currencies = new AcceptedCurrencies(
                 List.of(
-                        BuiltInRegistries.ITEM.wrapAsHolder(Items.DIAMOND)
+                        BuiltInRegistries.ITEM.wrapAsHolder(Items.DIAMOND),
+                        BuiltInRegistries.ITEM.wrapAsHolder(Items.NETHERITE_SCRAP)
                 )
         );
 

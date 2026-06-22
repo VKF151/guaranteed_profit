@@ -5,7 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
 import org.jetbrains.annotations.NotNull;
-import vance.profit.block.ModBlocks;
+import vance.profit.item.ids.ModBlockItemIds;
 import vance.profit.util.ModTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -17,10 +17,7 @@ public class ModBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider wrapperLookup) {
-        valueLookupBuilder(ModTags.Blocks.NEEDS_CRAZY_SLOTS_TOOL)
-                .forceAddTag(BlockTags.NEEDS_DIAMOND_TOOL);
-
-        valueLookupBuilder(BlockTags.NEEDS_IRON_TOOL)
-                .add(ModBlocks.SLOT_MACHINE);
+        builder(ModTags.Blocks.NEEDS_CRAZY_SLOTS_TOOL).forceAddTag(BlockTags.NEEDS_DIAMOND_TOOL);
+        builder(BlockTags.NEEDS_IRON_TOOL).add(ModBlockItemIds.SLOT_MACHINE.block());
     }
 }

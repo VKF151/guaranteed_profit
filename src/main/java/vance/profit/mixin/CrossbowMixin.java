@@ -13,7 +13,7 @@ import vance.profit.events.CrossbowFireCallback;
 
 @Mixin(CrossbowItem.class)
 public class CrossbowMixin {
-    @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/CrossbowItem;performShooting(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;FFLnet/minecraft/world/entity/LivingEntity;)V"), cancellable = true)
+    @Inject(method = "use", at = @At(value = "TAIL", target = "Lnet/minecraft/world/item/CrossbowItem;performShooting(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/InteractionHand;Lnet/minecraft/world/item/ItemStack;FFLnet/minecraft/world/entity/LivingEntity;)V"), cancellable = true)
     private void onUse(Level level, Player player, InteractionHand hand, CallbackInfoReturnable<InteractionResult> cir) {
         InteractionResult result = CrossbowFireCallback.EVENT.invoker().interact(player, level, hand);
         if (result == InteractionResult.CONSUME) {

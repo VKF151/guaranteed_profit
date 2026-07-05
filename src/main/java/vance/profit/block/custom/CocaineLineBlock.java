@@ -23,6 +23,12 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
+import vance.profit.codec.BlockSideEffects;
+import vance.profit.effect.ModEffects;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class CocaineLineBlock extends Block {
     public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
@@ -90,11 +96,30 @@ public class CocaineLineBlock extends Block {
         level.playSound(
                 null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.SNIFFER_SNIFFING, SoundSource.PLAYERS, 1.0f, 1.0f
         );
-        if (level.getBlockState(pos.below()).is(Blocks.PRISMARINE)){
-            player.addEffect(new MobEffectInstance(MobEffects.CONDUIT_POWER, 600, 0));
+        List<BlockSideEffects> sideEffects = getBlockSideEffects(level.getBlockState(pos.below()).getBlock());
+        if (sideEffects != null) {
+            for (BlockSideEffects record : sideEffects) {
+                record.sideEffects().forEach(effect -> {
+                    int recordDuration = player.hasEffect(effect) ? Objects.requireNonNull(player.getEffect(effect)).getDuration() + 400 : record.duration();
+                    player.addEffect(new MobEffectInstance(effect, recordDuration, record.strength()));
+                });
+            }
         }
-        player.addEffect(new MobEffectInstance(MobEffects.SPEED, 600, 0));
+        player.removeEffect(MobEffects.WEAKNESS);
+        player.removeEffect(MobEffects.MINING_FATIGUE);
+        player.removeEffect(MobEffects.HUNGER);
+
+        int increasingAmplifier = player.hasEffect(ModEffects.STIMULATED) ? Objects.requireNonNull(player.getEffect(ModEffects.STIMULATED)).getAmplifier() + 1 : 0;
+        int increasingDuration = player.hasEffect(ModEffects.STIMULATED) ?
+                Objects.requireNonNull(player.getEffect(ModEffects.STIMULATED)).getDuration() + 400 : 1800;
+
+        player.addEffect(new MobEffectInstance(ModEffects.STIMULATED, increasingDuration, increasingAmplifier));
         level.removeBlock(pos, false);
         return InteractionResult.SUCCESS;
+    }
+
+    private List<BlockSideEffects> getBlockSideEffects(Block block) {
+        return BlockSideEffects.BLOCK_SIDE_EFFECTS.stream().filter(blockSideEffects ->
+                blockSideEffects.blockState().is(block)).collect(Collectors.toList());
     }
 }

@@ -107,7 +107,7 @@ public class SlotMachineBlock extends BaseEntityBlock {
             blockEntity.setChanged();
             return InteractionResult.SUCCESS;
         } else if (!handStack.isEmpty() && handStack.getItem() == ModItems.SLOT_SPINNER){
-            blockEntity.playGame(pos, world);
+            blockEntity.playGame(pos, world, player);
             if (!player.hasInfiniteMaterials()) handStack.shrink(1);
         } else {
             if (!storedStack.isEmpty()) {
@@ -138,7 +138,7 @@ public class SlotMachineBlock extends BaseEntityBlock {
                     blockEntity.setLastActivatedTime(currentTime);
 
                     if (!storedStack.isEmpty() && storedStack.getCount() > 0) {
-                        blockEntity.playGame(pos, world);
+                        blockEntity.playGame(pos, world, world.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 16.0, false));
                         storedStack.shrink(1);
 
                     }

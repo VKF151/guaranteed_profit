@@ -17,6 +17,7 @@ import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
 import vance.profit.components.ModComponents;
+import vance.profit.effect.ModEffects;
 import vance.profit.item.ModItems;
 
 import java.util.*;
@@ -33,6 +34,9 @@ public class CrazySlotsItem extends Item {
         if (!world.isClientSide()) {
             Random random = new Random();
             int randomNumber = random.nextInt(6) + 1;
+            if (player.hasEffect(ModEffects.GAMBLERS_FAVOR)) {
+                randomNumber = Math.min((Objects.requireNonNull(player.getEffect(ModEffects.GAMBLERS_FAVOR)).getAmplifier() + 1 + randomNumber), 6);
+            }
             ItemStack newItem = getWeaponForNumber(randomNumber);
 
             ItemEnchantments enchants = player.getItemInHand(hand).get(DataComponents.ENCHANTMENTS);

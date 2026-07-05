@@ -14,9 +14,13 @@ import org.slf4j.LoggerFactory;
 import vance.profit.block.ModBlocks;
 import vance.profit.block.custom.entity.ModBlockEntities;
 import vance.profit.codec.AcceptedCurrencies;
+import vance.profit.codec.BlockSideEffects;
 import vance.profit.components.ModComponents;
+import vance.profit.effect.ModEffects;
 import vance.profit.events.CrossbowFireCallback;
 import vance.profit.item.ModItems;
+import vance.profit.world.ModDamageTypes;
+import vance.profit.world.ModGameRules;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,9 +33,13 @@ public class Guaranteed_profit implements ModInitializer {
 	public void onInitialize() {
 		ModItems.registerModItems();
 		ModBlocks.initialize();
+		ModEffects.initialize();
 		ModBlockEntities.initialize();
 		AcceptedCurrencies.loadCurrencies();
+		BlockSideEffects.loadSideEffects();
 		ModComponents.initialize();
+		ModGameRules.initialize();
+		ModDamageTypes.initialize();
 
 		AttackEntityCallback.EVENT.register((playerEntity, world, hand, entity, entityHitResult) -> {
 			ItemStack stack = playerEntity.getMainHandItem();

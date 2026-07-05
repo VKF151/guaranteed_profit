@@ -1,6 +1,7 @@
 package vance.profit.block.custom.entity;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,7 +30,9 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import vance.profit.Guaranteed_profit;
 import vance.profit.codec.AcceptedCurrencies;
+import vance.profit.effect.ModEffects;
 import vance.profit.inventory.SlotMachineInventory;
+import vance.profit.world.ModGameRules;
 
 import java.util.Collections;
 import java.util.List;
@@ -71,11 +74,14 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
         ContainerHelper.loadAllItems(view, items);
     }
 
-    public void playGame(BlockPos pos, Level world) {
+    public void playGame(BlockPos pos, Level world, Player player) {
 
 
         if (!world.isClientSide()) {
-            boolean win = world.getRandom().nextFloat() <0.25;
+            int slotMachineChance = Objects.requireNonNull(world.getServer()).getGameRules().get(ModGameRules.SLOT_MACHINE_CHANCE_GAMERULE);
+            int bonusChance = player.hasEffect(ModEffects.GAMBLERS_FAVOR) ? (Objects.requireNonNull(player.getEffect(ModEffects.GAMBLERS_FAVOR)).getAmplifier() + 1): 0;
+
+            boolean win = world.getRandom().nextInt(slotMachineChance) + bonusChance >= slotMachineChance - 1;
 
             BlockState currentState = world.getBlockState(pos);
             world.setBlock(pos, currentState.setValue(WIN, win), Block.UPDATE_ALL);

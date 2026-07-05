@@ -1,0 +1,10 @@
+{
+  "block_state": {
+    "Name" : "guaranteed_profit:slot_machine"
+  },
+  "effects": [
+    "guaranteed_profit:gamblers_favor"
+  ],
+  "duration": 8400,
+  "strength": 0
+}

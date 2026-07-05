@@ -1,0 +1,10 @@
+{
+  "block_state": {
+    "Name" : "minecraft:prismarine"
+  },
+  "effects": [
+    "minecraft:conduit_power"
+  ],
+  "duration": 600,
+  "strength": 0
+}

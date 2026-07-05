@@ -1,0 +1,10 @@
+{
+  "block_state": {
+    "Name": "minecraft:beacon"
+  },
+  "effects": [
+    "minecraft:haste"
+  ],
+  "duration": 600,
+  "strength": 1
+}

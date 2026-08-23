@@ -9,9 +9,6 @@
  "item.guaranteed_profit.crazy_sword": "Sword of Revival",
  "item.guaranteed_profit.slot_spinner": "Slot Spinner",
  "itemGroup.guaranteed_profit": "Guaranteed Profit",
- "block.guaranteed_profit.cocaine_line": "Cocaine Powder",
- "effect.guaranteed_profit.gamblers_favor": "Gambler's Favor",
  "guaranteed_profit.slot_machine_chance": "Slot Machine Chance",
- "gamerule.guaranteed_profit.slot_machine_chance": "1 in value chance of slot mcahine winning",
- "death.attack.overdose": "%1$s suffered an adverse reaction"
+ "gamerule.guaranteed_profit.slot_machine_chance": "1 in x chance of slot machine winning"
 }

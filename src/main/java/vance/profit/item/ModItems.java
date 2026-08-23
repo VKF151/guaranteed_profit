@@ -91,7 +91,6 @@ public class ModItems {
     ));
 
     public static final Item SLOT_MACHINE = registerBlock(ModBlockItemIds.SLOT_MACHINE, ModBlocks.SLOT_MACHINE);
-    public static final Item COCAINE_LINE = registerBlock(ModBlockItemIds.COCAINE_LINE, ModBlocks.COCAINE_LINE);
 
     private static Item registerBlock(final ModBlockItemId id, final Block block) {
         return registerBlock(id, block, BlockItem::new);
@@ -138,7 +137,6 @@ public class ModItems {
             fabricItemGroupEntries.accept(ModItems.CRAZY_TRIDENT);
             fabricItemGroupEntries.accept(ModItems.CRAZY_AXE);
             fabricItemGroupEntries.accept(ModItems.SLOT_SPINNER);
-            fabricItemGroupEntries.accept(ModItems.COCAINE_LINE);
         });
     }
 }

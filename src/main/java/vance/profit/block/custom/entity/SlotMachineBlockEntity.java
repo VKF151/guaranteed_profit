@@ -1,6 +1,7 @@
 package vance.profit.block.custom.entity;
 
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -30,7 +31,6 @@ import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import vance.profit.Guaranteed_profit;
 import vance.profit.codec.AcceptedCurrencies;
-import vance.profit.effect.ModEffects;
 import vance.profit.inventory.SlotMachineInventory;
 import vance.profit.world.ModGameRules;
 
@@ -79,7 +79,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
 
         if (!world.isClientSide()) {
             int slotMachineChance = Objects.requireNonNull(world.getServer()).getGameRules().get(ModGameRules.SLOT_MACHINE_CHANCE_GAMERULE);
-            int bonusChance = player.hasEffect(ModEffects.GAMBLERS_FAVOR) ? (Objects.requireNonNull(player.getEffect(ModEffects.GAMBLERS_FAVOR)).getAmplifier() + 1): 0;
+            int bonusChance = player.hasEffect(MobEffects.LUCK) ? (Objects.requireNonNull(player.getEffect(MobEffects.LUCK)).getAmplifier() + 1): 0;
 
             boolean win = world.getRandom().nextInt(slotMachineChance) + bonusChance >= slotMachineChance - 1;
 

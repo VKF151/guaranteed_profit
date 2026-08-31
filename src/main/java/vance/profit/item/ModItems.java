@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.component.Weapon;
+import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 import vance.profit.Guaranteed_profit;
 import vance.profit.block.ModBlocks;
@@ -27,20 +28,20 @@ import static net.minecraft.world.item.Items.BREEZE_ROD;
 public class ModItems {
 
     public static final Item SLOT_SPINNER = registerItem(ModItemIds.SLOT_SPINNER,
-            (new Item.Properties())
+            new Item.Properties()
                     .stacksTo(7)
                     .fireResistant()
                     .rarity(Rarity.EPIC)
     );
 
     public static final Item CRAZY_SLOTS = registerItem(ModItemIds.CRAZY_SLOTS, CrazySlotsItem::new,
-            (new Item.Properties())
+            new Item.Properties()
                     .stacksTo(1)
                     .fireResistant()
     );
 
     public static final Item CRAZY_SCYTHE = registerItem(ModItemIds.CRAZY_SCYTHE, CrazyScytheItem::new,
-            (new Item.Properties())
+            new Item.Properties()
                     .stacksTo(1)
                     .fireResistant()
                     .rarity(Rarity.RARE)
@@ -49,7 +50,7 @@ public class ModItems {
     );
 
     public static final Item CRAZY_MACE = registerItem(ModItemIds.CRAZY_MACE, CrazyMaceItem::new,
-            (new Item.Properties())
+            new Item.Properties()
                     .rarity(Rarity.RARE)
                     .durability(2031)
                     .component(DataComponents.TOOL, CrazyMaceItem.createToolProperties())
@@ -62,7 +63,7 @@ public class ModItems {
     );
 
     public static final Item CRAZY_TRIDENT = registerItem(ModItemIds.CRAZY_TRIDENT, CrazyTridentitem::new,
-            (new Item.Properties())
+            new Item.Properties()
                     .rarity(Rarity.RARE)
                     .fireResistant()
                     .stacksTo(1)
@@ -75,7 +76,7 @@ public class ModItems {
 
     public static final Item CRAZY_AXE = registerItem(ModItemIds.CRAZY_AXE, (p) -> new AxeItem(
             ModToolMaterials.CRAZY_SLOTS, 5.0F, -3.0F, p),
-            (new Item.Properties())
+            new Item.Properties()
                     .fireResistant()
                     .stacksTo(1)
                     .rarity(Rarity.RARE)
@@ -89,6 +90,13 @@ public class ModItems {
                     .rarity(Rarity.RARE)
                     .component(DataComponents.DEATH_PROTECTION, DeathProtection.TOTEM_OF_UNDYING)
     ));
+
+    public static final Item HOUSES_HAND_MASK = registerItem(ModItemIds.HOUSES_HAND_MASK, HousesHandMaskItem::new,
+            new Item.Properties()
+                    .humanoidArmor(HouseArmorMaterial.INSTANCE, ArmorType.HELMET)
+                    .durability(ArmorType.HELMET.getDurability(HouseArmorMaterial.BASE_ARMOR_DURABILITY))
+                    .attributes(HousesHandMaskItem.createAttributeModifiers())
+    );
 
     public static final Item SLOT_MACHINE = registerBlock(ModBlockItemIds.SLOT_MACHINE, ModBlocks.SLOT_MACHINE);
 
@@ -137,6 +145,7 @@ public class ModItems {
             fabricItemGroupEntries.accept(ModItems.CRAZY_TRIDENT);
             fabricItemGroupEntries.accept(ModItems.CRAZY_AXE);
             fabricItemGroupEntries.accept(ModItems.SLOT_SPINNER);
+            fabricItemGroupEntries.accept(ModItems.HOUSES_HAND_MASK);
         });
     }
 }

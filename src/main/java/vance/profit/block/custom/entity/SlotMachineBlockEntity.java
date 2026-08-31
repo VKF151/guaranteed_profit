@@ -1,9 +1,10 @@
 package vance.profit.block.custom.entity;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -32,7 +33,9 @@ import org.jspecify.annotations.Nullable;
 import vance.profit.Guaranteed_profit;
 import vance.profit.codec.AcceptedCurrencies;
 import vance.profit.inventory.SlotMachineInventory;
+import vance.profit.item.ModItems;
 import vance.profit.world.ModGameRules;
+import vance.profit.world.SavedGamblingData;
 
 import java.util.Collections;
 import java.util.List;
@@ -78,8 +81,9 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
 
 
         if (!world.isClientSide()) {
+            SavedGamblingData savedGamblingData = SavedGamblingData.getSavedGamblingData(Objects.requireNonNull(world.getServer()));
             int slotMachineChance = Objects.requireNonNull(world.getServer()).getGameRules().get(ModGameRules.SLOT_MACHINE_CHANCE_GAMERULE);
-            int bonusChance = player.hasEffect(MobEffects.LUCK) ? (Objects.requireNonNull(player.getEffect(MobEffects.LUCK)).getAmplifier() + 1): 0;
+            int bonusChance = (int) Math.floor(Objects.requireNonNull(player.getAttribute(Attributes.LUCK)).getValue());
 
             boolean win = world.getRandom().nextInt(slotMachineChance) + bonusChance >= slotMachineChance - 1;
 
@@ -94,6 +98,11 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
                         null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.NOTE_BLOCK_PLING, SoundSource.BLOCKS, 1.0f, 1.0f
                 );
                 for (ItemStack itemStack : getWonItem(SlotMachineBlockEntity.this)) {
+                    if (itemStack.is(ModItems.HOUSES_HAND_MASK)){
+                        if (savedGamblingData.getMasksWon() >= world.getServer().getGameRules().get(ModGameRules.MAX_WON_MASKS)) {
+                            itemStack = Items.TURTLE_HELMET.getDefaultInstance();
+                        } else savedGamblingData.incrementMasksWon();
+                    }
                     popResource(world, pos.above(), itemStack);
                 }
 
@@ -122,11 +131,13 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
         String itemName = BuiltInRegistries.ITEM.getKey(internalCurrency).getPath();
         Identifier lootTableId = Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, "rewards/slot_machine/" + itemName);
         LootTable lootTable = Objects.requireNonNull(entity.getLevel().getServer()).reloadableRegistries().getLootTable(ResourceKey.create(Registries.LOOT_TABLE, lootTableId));
-        return lootTable.getRandomItems(
+        List<ItemStack> wonItems = lootTable.getRandomItems(
                 new LootParams.Builder((ServerLevel) entity.getLevel())
                         .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(entity.getBlockPos()))
-                        .create(LootContextParamSets.CHEST)
-        );
+                        .create(LootContextParamSets.CHEST));
+
+        return wonItems;
+
     }
 
     public  boolean getWon() {

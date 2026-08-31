@@ -8,7 +8,9 @@
  "item.guaranteed_profit.crazy_axe": "Hand Axe",
  "item.guaranteed_profit.crazy_sword": "Sword of Revival",
  "item.guaranteed_profit.slot_spinner": "Slot Spinner",
+ "item.guaranteed_profit.houses_hand_mask": "Mask of The House's Hand",
  "itemGroup.guaranteed_profit": "Guaranteed Profit",
  "guaranteed_profit.slot_machine_chance": "Slot Machine Chance",
- "gamerule.guaranteed_profit.slot_machine_chance": "1 in x chance of slot machine winning"
+ "gamerule.guaranteed_profit.slot_machine_chance": "1 in x chance of slot machine winning",
+ "gamerule.guaranteed_profit.max_masks_won": "Maximum amount of House's Hand Masks that can be won"
 }

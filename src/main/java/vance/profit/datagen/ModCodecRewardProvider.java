@@ -23,7 +23,8 @@ public class ModCodecRewardProvider extends ModRewardProvider{
         AcceptedCurrencies currencies = new AcceptedCurrencies(
                 List.of(
                         BuiltInRegistries.ITEM.wrapAsHolder(Items.DIAMOND),
-                        BuiltInRegistries.ITEM.wrapAsHolder(Items.NETHERITE_SCRAP)
+                        BuiltInRegistries.ITEM.wrapAsHolder(Items.NETHERITE_SCRAP),
+                        BuiltInRegistries.ITEM.wrapAsHolder(Items.TURTLE_HELMET)
                 )
         );
 

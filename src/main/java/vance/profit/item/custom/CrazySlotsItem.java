@@ -2,7 +2,7 @@ package vance.profit.item.custom;
 
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.util.Unit;
-import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.entity.player.Player;
@@ -34,8 +34,9 @@ public class CrazySlotsItem extends Item {
         if (!world.isClientSide()) {
             Random random = new Random();
             int randomNumber = random.nextInt(6) + 1;
-            if (player.hasEffect(MobEffects.LUCK)) {
-                randomNumber = Math.min((Objects.requireNonNull(player.getEffect(MobEffects.LUCK)).getAmplifier() + 1 + randomNumber), 6);
+            int luck = (int) Math.floor(Objects.requireNonNull(player.getAttribute(Attributes.LUCK)).getValue());
+            if (luck >= 0) {
+                randomNumber = Math.min((luck + randomNumber), 6);
             }
             ItemStack newItem = getWeaponForNumber(randomNumber);
 

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:barter",
+  "pools": [
+    {
+      "conditions": [],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "guaranteed_profit:houses_hand_mask"
+        }
+      ],
+      "rolls": 1
+    }
+  ]
+}

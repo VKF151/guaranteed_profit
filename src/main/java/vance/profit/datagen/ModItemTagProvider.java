@@ -6,6 +6,8 @@ import net.minecraft.references.ItemIds;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import org.jetbrains.annotations.NotNull;
+import vance.profit.item.HouseArmorMaterial;
+import vance.profit.item.ids.ModBlockItemIds;
 import vance.profit.item.ids.ModItemIds;
 import vance.profit.util.ModTags;
 
@@ -25,5 +27,7 @@ public class ModItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
         builder(ItemTags.HOES).add(ModItemIds.CRAZY_SCYTHE);
         builder(ItemTags.MACE_ENCHANTABLE).add(ModItemIds.CRAZY_MACE);
         builder(ItemTags.TRIDENT_ENCHANTABLE).add(ModItemIds.CRAZY_TRIDENT);
+        builder(HouseArmorMaterial.REPAIRS_HOUSE_ARMOR).add(ModBlockItemIds.SLOT_MACHINE.item());
+        builder(ItemTags.HEAD_ARMOR).add(ModItemIds.HOUSES_HAND_MASK);
     }
 }

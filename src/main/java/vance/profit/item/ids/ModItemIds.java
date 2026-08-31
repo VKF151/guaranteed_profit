@@ -13,7 +13,8 @@ public class ModItemIds {
     public static final ResourceKey<Item> CRAZY_MACE = create("crazy_mace");
     public static final ResourceKey<Item> CRAZY_TRIDENT = create("crazy_trident");
     public static final ResourceKey<Item> CRAZY_AXE = create("crazy_axe");
-    public static final ResourceKey<Item> CRAZY_SWORD= create("crazy_sword");
+    public static final ResourceKey<Item> CRAZY_SWORD = create("crazy_sword");
+    public static final ResourceKey<Item> HOUSES_HAND_MASK = create("houses_hand_mask");
 
 
     private static ResourceKey<Item> create(final String name) {

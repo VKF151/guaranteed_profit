@@ -1,6 +1,7 @@
 {
   "accepted_currencies": [
     "minecraft:diamond",
-    "minecraft:netherite_scrap"
+    "minecraft:netherite_scrap",
+    "minecraft:turtle_helmet"
   ]
 }

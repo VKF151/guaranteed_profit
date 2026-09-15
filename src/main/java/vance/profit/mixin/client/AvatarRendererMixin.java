@@ -17,7 +17,7 @@ public class AvatarRendererMixin {
             cancellable = true
     )
     private static void injectScytheArmPose(Avatar avatar, ItemStack itemInHand, InteractionHand hand, CallbackInfoReturnable<HumanoidModel.ArmPose> cir) {
-        if (!itemInHand.isEmpty() && !avatar.swinging && itemInHand.is(ModItems.CRAZY_SCYTHE)) {
+        if (!itemInHand.isEmpty() && !avatar.isSwinging() && itemInHand.is(ModItems.CRAZY_SCYTHE)) {
             cir.setReturnValue(HumanoidModel.ArmPose.SPEAR);
         }
     }

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_crazy_scythe": {
+    "has_crazy_slots": {
       "conditions": {
         "items": [
           {
-            "items": "guaranteed_profit:crazy_scythe"
+            "items": "guaranteed_profit:crazy_slots"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "guaranteed_profit:crazy_scythe_recipe"
+        "recipes": "guaranteed_profit:crazy_scythe_recipe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,7 +21,7 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_crazy_scythe"
+      "has_crazy_slots"
     ]
   ],
   "rewards": {

@@ -74,13 +74,13 @@ public class ModItems {
                     .component(DataComponents.WEAPON, new Weapon(1))
     );
 
-    public static final Item CRAZY_AXE = registerItem(ModItemIds.CRAZY_AXE, (p) -> new AxeItem(
-            ModToolMaterials.CRAZY_SLOTS, 5.0F, -3.0F, p),
+    public static final Item CRAZY_AXE = registerItem(ModItemIds.CRAZY_AXE, (
             new Item.Properties()
+                    .axe(ModToolMaterials.CRAZY_SLOTS, 5.0F, -3.0F)
                     .fireResistant()
                     .stacksTo(1)
                     .rarity(Rarity.RARE)
-    );
+            ));
 
     public static final Item CRAZY_SWORD = registerItem(ModItemIds.CRAZY_SWORD, (
             new Item.Properties()

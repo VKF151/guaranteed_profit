@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "guaranteed_profit:crazy_slots_recipe"
+        "recipes": "guaranteed_profit:crazy_slots_recipe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

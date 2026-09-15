@@ -1,6 +1,6 @@
 package vance.profit.block.custom;
 
-import com.mojang.serialization.MapCodec;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -52,9 +52,6 @@ public class SlotMachineBlock extends BaseEntityBlock {
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, WIN);
     }
-
-    @Override
-    public @NonNull MapCodec<? extends SlotMachineBlock> codec() {return simpleCodec(SlotMachineBlock::new);}
 
     @Nullable
     @Override
@@ -111,7 +108,7 @@ public class SlotMachineBlock extends BaseEntityBlock {
             if (!player.hasInfiniteMaterials()) handStack.shrink(1);
         } else {
             if (!storedStack.isEmpty()) {
-                player.getInventory().placeItemBackInInventory(storedStack.copy());
+                player.getInventory().placeItemBackInInventory(storedStack.copy(), Prediction.PREDICTED);
                 blockEntity.setItem(0, ItemStack.EMPTY);
                 blockEntity.setChanged();
                 return InteractionResult.SUCCESS;

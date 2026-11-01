@@ -29,7 +29,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import vance.profit.Guaranteed_profit;
 import vance.profit.codec.AcceptedCurrencies;
 import vance.profit.inventory.SlotMachineInventory;
@@ -59,10 +58,10 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
     }
 
     @Override
-    public @Nullable ItemStack removeItemNoUpdate(int slot) {
+    public @NonNull ItemStack removeItemNoUpdate(int slot) {
         items.set(slot, ItemStack.EMPTY);
         setChanged();
-        return null;
+        return ItemStack.EMPTY;
     }
 
     @Override
@@ -109,6 +108,7 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
 
 
             } else {
+                savedGamblingData.incrementHousesHoard(1);
                 setWON(false);
                 world.setBlockAndUpdate(pos, currentState.setValue(WIN, false));
                 world.playSound(

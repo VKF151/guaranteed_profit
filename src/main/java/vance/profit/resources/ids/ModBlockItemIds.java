@@ -1,4 +1,4 @@
-package vance.profit.item.ids;
+package vance.profit.resources.ids;
 
 
 public class ModBlockItemIds {

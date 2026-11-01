@@ -7,8 +7,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.ItemTags;
 import org.jetbrains.annotations.NotNull;
 import vance.profit.item.HouseArmorMaterial;
-import vance.profit.item.ids.ModBlockItemIds;
-import vance.profit.item.ids.ModItemIds;
+import vance.profit.resources.ids.ModBlockItemIds;
+import vance.profit.resources.ids.ModItemIds;
 import vance.profit.util.ModTags;
 
 import java.util.concurrent.CompletableFuture;

@@ -15,10 +15,11 @@ import net.minecraft.world.item.equipment.ArmorType;
 import net.minecraft.world.level.block.Block;
 import vance.profit.Guaranteed_profit;
 import vance.profit.block.ModBlocks;
+import vance.profit.components.ModComponents;
 import vance.profit.item.custom.*;
-import vance.profit.item.ids.ModBlockItemId;
-import vance.profit.item.ids.ModBlockItemIds;
-import vance.profit.item.ids.ModItemIds;
+import vance.profit.resources.ids.ModBlockItemId;
+import vance.profit.resources.ids.ModBlockItemIds;
+import vance.profit.resources.ids.ModItemIds;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -96,7 +97,11 @@ public class ModItems {
                     .humanoidArmor(HouseArmorMaterial.INSTANCE, ArmorType.HELMET)
                     .durability(ArmorType.HELMET.getDurability(HouseArmorMaterial.BASE_ARMOR_DURABILITY))
                     .attributes(HousesHandMaskItem.createAttributeModifiers())
+                    .component(ModComponents.HIDES_NAME, true)
     );
+
+    public static final Item ROULETTE_TABLE = registerItem(ModItemIds.ROULETTE_TABLE, RouletteTableItem::new,
+            new Item.Properties());
 
     public static final Item SLOT_MACHINE = registerBlock(ModBlockItemIds.SLOT_MACHINE, ModBlocks.SLOT_MACHINE);
 
@@ -146,6 +151,7 @@ public class ModItems {
             fabricItemGroupEntries.accept(ModItems.CRAZY_AXE);
             fabricItemGroupEntries.accept(ModItems.SLOT_SPINNER);
             fabricItemGroupEntries.accept(ModItems.HOUSES_HAND_MASK);
+            fabricItemGroupEntries.accept(ModItems.ROULETTE_TABLE);
         });
     }
 }

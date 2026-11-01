@@ -7,8 +7,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import vance.profit.block.custom.SlotMachineBlock;
-import vance.profit.item.ids.ModBlockItemId;
-import vance.profit.item.ids.ModBlockItemIds;
+import vance.profit.resources.ids.ModBlockItemId;
+import vance.profit.resources.ids.ModBlockItemIds;
 
 import java.util.function.Function;
 

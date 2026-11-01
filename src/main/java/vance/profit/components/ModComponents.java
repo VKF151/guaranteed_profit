@@ -31,6 +31,9 @@ public class ModComponents {
     public static final DataComponentType<Integer> ABILITY_USES =
             register("ability_uses", integerBuilder -> integerBuilder.persistent(ExtraCodecs.POSITIVE_INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    public static final DataComponentType<Boolean> HIDES_NAME =
+            register("hides_name", booleanBuilder ->  booleanBuilder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+
     private static <T> DataComponentType<T> register(String name, UnaryOperator<DataComponentType.Builder<T>> builderOperator) {
         return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, name),
                 builderOperator.apply(DataComponentType.builder()).build());

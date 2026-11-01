@@ -1,9 +1,14 @@
 package vance.profit;
 
+import com.google.common.collect.ImmutableMap;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.sounds.SoundSource;
@@ -13,8 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import vance.profit.block.ModBlocks;
 import vance.profit.block.custom.entity.ModBlockEntities;
+import vance.profit.client.entity.RouletteTableRenderer;
+import vance.profit.client.model.RouletteTableModel;
 import vance.profit.codec.AcceptedCurrencies;
 import vance.profit.components.ModComponents;
+import vance.profit.entity.ModEntityTypes;
+import vance.profit.entity.decoration.RouletteTable;
 import vance.profit.events.CrossbowFireCallback;
 import vance.profit.item.ModItems;
 import vance.profit.world.ModGameRules;
@@ -34,6 +43,9 @@ public class Guaranteed_profit implements ModInitializer {
 		AcceptedCurrencies.loadCurrencies();
 		ModComponents.initialize();
 		ModGameRules.initialize();
+		ModEntityTypes.initialize();
+		ModelLayerRegistry.registerModelLayer(RouletteTableRenderer.ROULETTE_TABLE, RouletteTableModel::createBodyLayer);
+		EntityRenderers.register(ModEntityTypes.ROULETTE_TABLE, RouletteTableRenderer::new);
 
 		AttackEntityCallback.EVENT.register((playerEntity, world, hand, entity, entityHitResult) -> {
 			ItemStack stack = playerEntity.getMainHandItem();

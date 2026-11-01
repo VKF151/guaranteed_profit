@@ -1,4 +1,4 @@
-package vance.profit.item.ids;
+package vance.profit.resources.ids;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;

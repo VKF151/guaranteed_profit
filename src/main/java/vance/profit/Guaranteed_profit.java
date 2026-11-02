@@ -41,9 +41,6 @@ public class Guaranteed_profit implements ModInitializer {
 		ModComponents.initialize();
 		ModGameRules.initialize();
 		ModEntityTypes.initialize();
-		ModelLayerRegistry.registerModelLayer(RouletteTableRenderer.ROULETTE_TABLE, RouletteTableModel::createBodyLayer);
-		ModelLayerRegistry.registerModelLayer(RouletteTableRenderer.ROULETTE_WHEEL, RouletteWheelModel::createBodyLayer);
-		EntityRenderers.register(ModEntityTypes.ROULETTE_TABLE, RouletteTableRenderer::new);
 
 		AttackEntityCallback.EVENT.register((playerEntity, world, hand, entity, entityHitResult) -> {
 			ItemStack stack = playerEntity.getMainHandItem();

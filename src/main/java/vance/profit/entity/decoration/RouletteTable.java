@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Continuation;
 import net.minecraft.util.Prediction;
@@ -50,6 +51,8 @@ public class RouletteTable extends BlockAttachedEntity{
     private static final EntityDataAccessor<ItemStack> DATA_ITEM = SynchedEntityData.defineId(RouletteTable.class, EntityDataSerializers.ITEM_STACK);
     private static final EntityDataAccessor<Integer> DATA_GRID_X = SynchedEntityData.defineId(RouletteTable.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> DATA_GRID_Y = SynchedEntityData.defineId(RouletteTable.class, EntityDataSerializers.INT);
+    private static final EntityDataAccessor<Integer> RESULT = SynchedEntityData.defineId(RouletteTable.class, EntityDataSerializers.INT);
+    private int miniGameTicks = 30;
     public record LocationCoordinate(int x, int y) {}
     private long lastActivatedTime;
     public Map<LocationCoordinate, String> coordToBet = new HashMap<>();
@@ -219,10 +222,12 @@ public class RouletteTable extends BlockAttachedEntity{
         super.addAdditionalSaveData(output);
         ItemStack currentItem = this.getItem();
         LocationCoordinate currentCoords = this.getGridCoords();
+        int currentResult = this.getResult();
         if (!currentItem.isEmpty()) {
             output.store("Item", ItemStack.CODEC, currentItem);
             output.store("slot_grid_X", Codec.INT, currentCoords.x());
             output.store("slot_grid_Y", Codec.INT, currentCoords.y());
+            output.store("result", Codec.INT, currentResult);
         }
     }
 
@@ -231,9 +236,11 @@ public class RouletteTable extends BlockAttachedEntity{
         super.readAdditionalSaveData(input);
         ItemStack itemStack = input.read("Item", ItemStack.CODEC).orElse(ItemStack.EMPTY);
         LocationCoordinate coordinates = new LocationCoordinate(input.read("slot_grid_X", Codec.INT).orElse(0), input.read("slot_grid_Y", Codec.INT).orElse(0));
+        Integer i = input.read("result", Codec.INT).orElse(0);
         setItem(itemStack);
         setDataGridX(coordinates.x);
         setDataGridY(coordinates.y);
+        setResult(i);
     }
 
     @Override
@@ -241,6 +248,7 @@ public class RouletteTable extends BlockAttachedEntity{
         entityData.define(DATA_ITEM, ItemStack.EMPTY);
         entityData.define(DATA_GRID_X, 0);
         entityData.define(DATA_GRID_Y, 0);
+        entityData.define(RESULT, 0);
 
     }
 
@@ -374,9 +382,16 @@ public class RouletteTable extends BlockAttachedEntity{
         if (this.level() instanceof ServerLevel level) {
             BlockPos here = BlockPos.containing(this.position());
             ItemStack stack = this.getItem();
-            if (level.getBestOwnOrNeighbourSignal(here) != 0 && getLastActivatedTime() + 5 < level.getGameTime()) {
-                setLastActivatedTime(level.getGameTime());
-                if (!stack.isEmpty() && stack.getCount() > 0) {
+            if (this.miniGameTicks > 0 && level.getBestOwnOrNeighbourSignal(here) != 0 && !stack.isEmpty() && stack.getCount() > 0) {
+                miniGameTicks--;
+                if (this.miniGameTicks % 2 == 0 && miniGameTicks > 8) {
+                    float pitch = 1.0f;
+                    if (this.miniGameTicks % 4 == 0) {
+                        pitch = 1.05f;
+                    }
+                    makeGameStartNoise(level, pitch);
+                }
+                if (this.miniGameTicks == 0) {
                     this.playGame(level, stack);
                 }
             }
@@ -410,12 +425,26 @@ public class RouletteTable extends BlockAttachedEntity{
     public Map<LocationCoordinate, String> getCoordToBet() {
         return coordToBet;
     }
+    public int getResult() {
+        return this.getEntityData().get(RESULT);
+    }
+    public void setResult(int i) {
+        this.getEntityData().set(RESULT, i);
+    }
+    public void makeGameStartNoise(ServerLevel level, float pitch) {
+        level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.NOTE_BLOCK_SNARE, SoundSource.BLOCKS, 1.0f, pitch);
+    }
     
     public void playGame(ServerLevel level, ItemStack betStack) {
+        if (this.miniGameTicks == 0) {
+            this.miniGameTicks = 30;
+        }
         int outcome = level.getRandom().nextInt(38);
+        setResult(outcome);
         List<Integer> numbersBetOn = getNumbersBetOn();
         boolean won = numbersBetOn.stream().anyMatch(n -> n == outcome);
         if (won) {
+            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.NOTE_BLOCK_PLING, SoundSource.BLOCKS, 1.0f, 1.0f);
             int amountWon = betStack.count() * (36/numbersBetOn.size());
             while (amountWon > 0) {
                 if (amountWon > 64) {
@@ -427,6 +456,7 @@ public class RouletteTable extends BlockAttachedEntity{
                 }
             }
         } else {
+            level.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.NOTE_BLOCK_BASEDRUM, SoundSource.BLOCKS, 1.0f, 0.9f);
             SavedGamblingData data = SavedGamblingData.getSavedGamblingData(level.getServer());
             data.incrementHousesHoard(betStack.count());
 

@@ -19,4 +19,5 @@ public class RouletteTableRenderState extends EntityRenderState {
     public final ItemStackRenderState item = new ItemStackRenderState();
     public RouletteTable.LocationCoordinate locationCoordinate = new RouletteTable.LocationCoordinate(0, 0);
     public Map<RouletteTable.LocationCoordinate, String> coordToBet;
+    public int result;
 }

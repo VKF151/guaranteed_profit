@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:diamond",
+    "S": "guaranteed_profit:slot_spinner",
+    "W": "#minecraft:wool_slabs",
+    "X": "#minecraft:wooden_slabs"
+  },
+  "pattern": [
+    "SW#",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "guaranteed_profit:roulette_table"
+  }
+}

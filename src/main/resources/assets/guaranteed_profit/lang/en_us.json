@@ -1,5 +1,7 @@
 {
  "block.guaranteed_profit.slot_machine": "Slot Machine",
+ "item.guaranteed_profit.roulette_table": "Roulette Table",
+ "entity.guaranteed_profit.roulette_table": "Roulette Table",
  "item.guaranteed_profit.crazy_slots": "Crazy Slots",
  "item.guaranteed_profit.crazy_scythe": "Vermilion Scythe",
  "item.guaranteed_profit.crazy_mace": "Blue Moon",

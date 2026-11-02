@@ -10,6 +10,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.Direction;
@@ -24,17 +25,23 @@ import org.jspecify.annotations.Nullable;
 import vance.profit.Guaranteed_profit;
 import vance.profit.client.entity.state.RouletteTableRenderState;
 import vance.profit.client.model.RouletteTableModel;
+import vance.profit.client.model.RouletteWheelModel;
 import vance.profit.entity.decoration.RouletteTable;
+
+import java.util.Arrays;
 
 @Environment(EnvType.CLIENT)
 public class RouletteTableRenderer extends EntityRenderer<RouletteTable, RouletteTableRenderState> {
     private final RouletteTableModel model;
+    private final RouletteWheelModel wheelModel;
     private final ItemModelResolver itemModelResolver;
     public static final ModelLayerLocation ROULETTE_TABLE = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, "roulette_table"), "main");
+    public static final ModelLayerLocation ROULETTE_WHEEL = new ModelLayerLocation(Identifier.fromNamespaceAndPath(Guaranteed_profit.MOD_ID, "roulette_wheel"), "main");
 
     public RouletteTableRenderer(final EntityRendererProvider.Context context) {
         super(context);
         this.model = new RouletteTableModel(context.bakeLayer(ROULETTE_TABLE));
+        this.wheelModel = new RouletteWheelModel(context.bakeLayer(ROULETTE_WHEEL));
         this.itemModelResolver = context.getItemModelResolver();
     }
 
@@ -46,6 +53,7 @@ public class RouletteTableRenderer extends EntityRenderer<RouletteTable, Roulett
         state.locationCoordinate = rouletteTable.getGridCoords();
         rouletteTable.makeBets();
         state.coordToBet = rouletteTable.getCoordToBet();
+        state.result = rouletteTable.getResult();
     }
     // Make text render the slot # / name when crosshair is over it
 
@@ -58,6 +66,13 @@ public class RouletteTableRenderer extends EntityRenderer<RouletteTable, Roulett
         submitNodeCollector.submitModel(
                 this.model, state, poseStack, this.model.renderType(state.texture), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor
         );
+        poseStack.pushPose();
+        poseStack.translate(0.25, 0.061, 0.3125);
+        submitNodeCollector.submitModel(
+                this.wheelModel, state, poseStack, this.model.renderType(state.texture), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor
+        );
+        poseStack.popPose();
+        submitResult(state, poseStack, submitNodeCollector, state.result);
 
         for (int i = 0; i < 9; i ++) {
             for (int j = 0; j < 4; j++) {
@@ -119,5 +134,23 @@ public class RouletteTableRenderer extends EntityRenderer<RouletteTable, Roulett
                 }
                 submitNodeCollector.submitText(poseStack, -textWidth/2.0F, 0.0F, sequence, true, Font.DisplayMode.NORMAL, state.lightCoords, 0xFFFFFFFF, 0, 0);
                 poseStack.popPose();
+    }
+    public void submitResult(RouletteTableRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int  result) {
+        poseStack.pushPose();
+        poseStack.rotateDegrees(Axis.XP, 90.0F);
+        poseStack.translate(0.46875, 0.71875, 0.006);
+        poseStack.scale(0.06F, -0.06F, 0.06F);
+        int color;
+        String resultString = String.valueOf(result);
+        if (result == 0 || result == 37) {
+            color = 0xFF277e44;
+        } else {
+            color = Arrays.asList(1, 3, 5 ,7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36).contains(result) ? 0xFFFF0000 : 0xFF111111;
+        }
+        FormattedCharSequence sequence = Component.literal(result == 37 ? "00" : resultString).getVisualOrderText();
+        float textWidth = this.getFont().width(sequence);
+        submitNodeCollector.submitText(poseStack, -textWidth/2.0F, 0.0F, sequence, false, Font.DisplayMode.NORMAL, state.lightCoords, color, 0, 0);
+        poseStack.popPose();
+
     }
 }

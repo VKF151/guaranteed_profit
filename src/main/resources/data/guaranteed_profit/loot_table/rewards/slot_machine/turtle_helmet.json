@@ -2,7 +2,6 @@
   "type": "minecraft:barter",
   "pools": [
     {
-      "conditions": [],
       "entries": [
         {
           "type": "minecraft:item",

@@ -454,7 +454,6 @@ public class RouletteTable extends BlockAttachedEntity{
 
         }
         setItem(ItemStack.EMPTY);
-        System.out.println(outcome);
     }
     public List<Integer> getNumbersBetOn() {
         List<Integer> numbersBetOn =  new ArrayList<>();

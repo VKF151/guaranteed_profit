@@ -54,7 +54,6 @@ public class RouletteTable extends BlockAttachedEntity{
     private static final EntityDataAccessor<Integer> RESULT = SynchedEntityData.defineId(RouletteTable.class, EntityDataSerializers.INT);
     private int miniGameTicks = 30;
     public record LocationCoordinate(int x, int y) {}
-    private long lastActivatedTime;
     public Map<LocationCoordinate, String> coordToBet = new HashMap<>();
 
     public RouletteTable(EntityType<? extends BlockAttachedEntity> type, Level level) {
@@ -363,13 +362,6 @@ public class RouletteTable extends BlockAttachedEntity{
             this.level().playSound(null, this.getX() + location.x, this.getY(), this.getZ() + location.z, sound, this.getSoundSource(), volume, pitch);
         }
 
-    }
-
-    public long getLastActivatedTime() {
-        return lastActivatedTime;
-    }
-    public void setLastActivatedTime(long lastActivatedTime) {
-        this.lastActivatedTime = lastActivatedTime;
     }
 
     @Override

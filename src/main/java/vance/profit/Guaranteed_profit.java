@@ -2,10 +2,18 @@ package vance.profit;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.core.Registry;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.sounds.SoundSource;
@@ -24,14 +32,17 @@ import vance.profit.entity.ModEntityTypes;
 import vance.profit.events.CrossbowFireCallback;
 import vance.profit.item.ModItems;
 import vance.profit.world.ModGameRules;
+import vance.profit.world.SavedGamblingData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Guaranteed_profit implements ModInitializer {
 	public static final String MOD_ID = "guaranteed_profit";
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
+	public static final SimpleParticleType FULL_SWEEP_PARTICLE = FabricParticleTypes.simple();
 	@Override
 	public void onInitialize() {
 		ModItems.registerModItems();
@@ -41,6 +52,8 @@ public class Guaranteed_profit implements ModInitializer {
 		ModComponents.initialize();
 		ModGameRules.initialize();
 		ModEntityTypes.initialize();
+
+		Registry.register(BuiltInRegistries.PARTICLE_TYPE, Identifier.fromNamespaceAndPath(MOD_ID, "full_sweep"), FULL_SWEEP_PARTICLE);
 
 		AttackEntityCallback.EVENT.register((playerEntity, world, hand, entity, entityHitResult) -> {
 			ItemStack stack = playerEntity.getMainHandItem();
@@ -109,6 +122,12 @@ public class Guaranteed_profit implements ModInitializer {
 
 			}
 			return InteractionResult.PASS;
+		});
+
+		ItemTooltipCallback.EVENT.register((stack, tooltipContext, tooltipFlag, lines) -> {
+			if (stack.has(ModComponents.HOARD_AMOUNT)) {
+				lines.add(Component.literal(String.valueOf(stack.get(ModComponents.HOARD_AMOUNT))));
+			}
 		});
 
 	}

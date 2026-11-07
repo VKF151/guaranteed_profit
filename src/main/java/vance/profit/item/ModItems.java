@@ -98,6 +98,7 @@ public class ModItems {
                     .durability(ArmorType.HELMET.getDurability(HouseArmorMaterial.BASE_ARMOR_DURABILITY))
                     .attributes(HousesHandMaskItem.createAttributeModifiers())
                     .component(ModComponents.HIDES_NAME, true)
+                    .component(ModComponents.HOARD_AMOUNT, 0)
     );
 
     public static final Item ROULETTE_TABLE = registerItem(ModItemIds.ROULETTE_TABLE, RouletteTableItem::new,

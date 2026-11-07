@@ -68,7 +68,7 @@ public class RouletteTableRenderer extends EntityRenderer<RouletteTable, Roulett
         poseStack.pushPose();
         poseStack.translate(0.25, 0.061, 0.3125);
         submitNodeCollector.submitModel(
-                this.wheelModel, state, poseStack, this.model.renderType(state.texture), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor
+                this.wheelModel, state, poseStack, this.wheelModel.renderType(state.texture), state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor
         );
         poseStack.popPose();
         submitResult(state, poseStack, submitNodeCollector, state.result);

@@ -12,6 +12,7 @@
   "client": [
     "client.AvatarRendererMixin",
     "client.FirstPersonHandsAndItemsRendererMixin",
-    "client.HumanoidModelMixin"
+    "client.HumanoidModelMixin",
+    "client.PlayerModelMixin"
   ]
 }

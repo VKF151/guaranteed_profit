@@ -16,6 +16,7 @@ public class ModItemIds {
     public static final ResourceKey<Item> CRAZY_SWORD = create("crazy_sword");
     public static final ResourceKey<Item> HOUSES_HAND_MASK = create("houses_hand_mask");
     public static final ResourceKey<Item> ROULETTE_TABLE = create("roulette_table");
+    public static final ResourceKey<Item> PROMISSORY_NOTE = create("promissory_note");
 
 
     private static ResourceKey<Item> create(final String name) {

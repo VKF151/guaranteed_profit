@@ -1,9 +1,14 @@
 package vance.profit;
 
+import com.mojang.serialization.Codec;
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.ModelLayerRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
@@ -12,7 +17,9 @@ import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.ItemStack;
@@ -43,6 +50,18 @@ public class Guaranteed_profit implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
 	public static final SimpleParticleType FULL_SWEEP_PARTICLE = FabricParticleTypes.simple();
+	public static final AttachmentType<Boolean> AMPUTEE = AttachmentRegistry.create(
+			Identifier.fromNamespaceAndPath(MOD_ID, "amputee"),
+			booleanBuilder -> booleanBuilder
+					.initializer(() -> false)
+					.syncWith(ByteBufCodecs.BOOL,
+							AttachmentSyncPredicate.all())
+					.persistent(Codec.BOOL)
+					.copyOnDeath()
+
+	);
+	public static final RenderStateDataKey<Boolean> FLESH_WOUND = RenderStateDataKey.create(() -> "flesh_wound");
+
 	@Override
 	public void onInitialize() {
 		ModItems.registerModItems();

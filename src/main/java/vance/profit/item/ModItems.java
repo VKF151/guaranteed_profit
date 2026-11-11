@@ -101,6 +101,13 @@ public class ModItems {
                     .component(ModComponents.HOARD_AMOUNT, 0)
     );
 
+    public static final Item PROMISSORY_NOTE = registerItem(ModItemIds.PROMISSORY_NOTE, TisButAScratchItem::new,
+            new Item.Properties()
+                    .stacksTo(1)
+                    .fireResistant()
+                    .rarity(Rarity.EPIC)
+    );
+
     public static final Item ROULETTE_TABLE = registerItem(ModItemIds.ROULETTE_TABLE, RouletteTableItem::new,
             new Item.Properties());
 

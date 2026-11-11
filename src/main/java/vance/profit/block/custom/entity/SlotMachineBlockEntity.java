@@ -77,8 +77,6 @@ public class SlotMachineBlockEntity extends BlockEntity implements SlotMachineIn
     }
 
     public void playGame(BlockPos pos, Level world, Player player) {
-
-
         if (!world.isClientSide()) {
             SavedGamblingData savedGamblingData = SavedGamblingData.getSavedGamblingData(Objects.requireNonNull(world.getServer()));
             int slotMachineChance = Objects.requireNonNull(world.getServer()).getGameRules().get(ModGameRules.SLOT_MACHINE_CHANCE_GAMERULE);
